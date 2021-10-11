@@ -18,13 +18,39 @@ function updateScreenTop(operator) {
   topResult.textContent = `${topResultString} ${operator}`;
 }
 
+function chooseOperator(operator) {
+  if (operatorChosen == "" && !(bottomResultString == "")) {
+    updateScreenTop(operator);
+  } else if (
+    !(operatorChosen == "") &&
+    !(bottomResultString == "") &&
+    !(topResultString == "")
+  ) {
+    if (bottomResultString == "0") {
+      alert("You Can't divide by Zero!");
+      bottomResultString = "";
+    } else {
+      bottomResultString = operate(
+        operatorChosen,
+        topResultString,
+        bottomResultString
+      );
+      operatorChosen = operator;
+      updateScreenTop(operatorChosen);
+    }
+  }
+}
+
 function showResult() {
-  if (!(bottomResultString == "") && !(topResultString == "")) {
+  if (bottomResultString == "0") {
+    alert("You Can't divide by Zero!");
+    bottomResultString = "";
+  } else if (!(bottomResultString == "") && !(topResultString == "")) {
     topResult.textContent = `${topResultString} ${operatorChosen} ${bottomResultString} =`;
     bottomResult.textContent = operate(
       operatorChosen,
-      bottomResultString,
-      topResultString
+      topResultString,
+      bottomResultString
     );
   } else {
     console.error("something is missing");
@@ -44,20 +70,30 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
-  return Number(num1) / Number(num2);
+  if (num2 == "0") {
+    alert("You Can't divide by Zero!");
+  } else {
+    return Number(num1) / Number(num2);
+  }
 }
 
 function operate(operator, num1, num2) {
+  let result = null;
   switch (operator) {
     case "+":
-      return add(num1, num2);
+      result = add(num1, num2);
+      break;
     case "-":
-      return substract(num1, num2);
+      result = substract(num1, num2);
+      break;
     case "*":
-      return multiply(num1, num2);
+      result = multiply(num1, num2);
+      break;
     case "/":
-      return divide(num1, num2);
+      result = divide(num1, num2);
+      break;
   }
+  return Math.round(result * 1000) / 1000;
 }
 
 function clearAll() {
@@ -78,6 +114,12 @@ function deleteNumber() {
   }
 }
 
+function addDecimal() {
+  if (!bottomResultString.includes(".")) {
+    updateScreenBottom(".");
+  }
+}
+
 let numBtns = document.querySelectorAll(".num");
 numBtns.forEach((btn) => {
   btn.addEventListener("click", (e) => {
@@ -88,7 +130,7 @@ numBtns.forEach((btn) => {
 let operatorBtns = document.querySelectorAll(".operator");
 operatorBtns.forEach((btn) => {
   btn.addEventListener("click", (e) => {
-    updateScreenTop(e.target.dataset.operator);
+    chooseOperator(e.target.dataset.operator);
   });
 });
 
@@ -106,3 +148,16 @@ let deleteBtn = document.querySelector(".delete");
 deleteBtn.addEventListener("click", () => {
   deleteNumber();
 });
+
+let decimalBtn = document.querySelector(".decimal");
+decimalBtn.addEventListener("click", () => {
+  addDecimal();
+});
+
+window.addEventListener("keydown", handleKeyboardInput);
+function handleKeyboardInput(e) {
+  if (e.key >= 0 && e.key <= 9) updateScreenBottom(e.key);
+  if (e.key === ".") addDecimal();
+  if (e.key === "=" || e.key === "Enter") showResult();
+  if (e.key === "Backspace") deleteNumber();
+}

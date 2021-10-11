@@ -1,20 +1,35 @@
-* {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
-  box-sizing: border-box;
 }
 
 body {
+  font-family: "Roboto", sans-serif;
+  line-height: 1.6;
+  /* footer support */
+  margin-bottom: 100px;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+.main {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
+  height: 75vh;
+  padding: 10px;
+  min-height: 500px;
+  margin-top: 50px;
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
   background-color: rgb(172, 177, 182);
   padding: 1rem;
   border-radius: 5px;
@@ -45,7 +60,7 @@ body {
 
 .screen .result_bottom {
   font-size: 40px;
-  min-height: 50px;
+  min-height: 65px;
 }
 
 .buttons {
@@ -82,4 +97,22 @@ body {
   border: 2px solid darkgray;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  font-size: 20px;
+}
+
+.footer .fab {
+  font-size: 30px;
+  color: #24292f;
 }
